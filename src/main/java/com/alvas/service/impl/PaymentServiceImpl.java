@@ -115,5 +115,34 @@ public class PaymentServiceImpl implements PaymentService {
 		throw new WalletExpiredException();
 
 	}
+	
+	public List<PurchaseHistoryResponse> getUserPurchasesForMonth(Long userId, LocalDate monthStartDate, int pageNumber,
+			int pageSize) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new UserIdNotFoundException("User not found with id: " + userId));
+		LocalDate monthEndDate = monthStartDate.withDayOfMonth(monthStartDate.lengthOfMonth());
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<Payment> paymentPage = paymentRepository.findByUserUserIdAndPaymentDateBetween(user.getUserId(),
+				monthStartDate, monthEndDate, pageable);
+
+		if (paymentPage.isEmpty()) {
+			throw new NoPurchaseHistoryFoundException("No purchase history found for user id: " + userId);
+		}
+
+		List<PurchaseHistoryResponse> purchaseHistoryResponses = new ArrayList<>();
+		paymentPage.getContent().forEach(payment -> {
+			Cart cart = payment.getCart();
+			List<CartProduct> cartProducts = cart.getCartProducts().stream()
+					.map(cartProduct -> new CartProduct(cartProduct.getCartProductId(), cartProduct.getProductId(),
+							cartProduct.getQuantity()))
+					.collect(Collectors.toList());
+
+			PurchaseHistoryResponse purchaseHistoryResponse = new PurchaseHistoryResponse(payment.getPaymentDate(),
+					payment.getTotalPrice(), cartProducts);
+			purchaseHistoryResponses.add(purchaseHistoryResponse);
+		});
+
+		return purchaseHistoryResponses;
+	}
 
 }
