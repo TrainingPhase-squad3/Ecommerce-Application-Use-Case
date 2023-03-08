@@ -74,4 +74,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 				.body(new ApiResponse(exception.getMessage(), HttpStatus.BAD_REQUEST));
 
 	}
+	@ExceptionHandler(UserIdNotFoundException.class)
+	public ResponseEntity<com.alvas.response.ApiResponse> handleResourceNotFoundException(
+			UserIdNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ApiResponse(exception.getMessage(), HttpStatus.NOT_FOUND));
+
+	}
+
+	@ExceptionHandler(NoPurchaseHistoryFoundException.class)
+	public ResponseEntity<com.alvas.response.ApiResponse> handleResourceNotFoundException(
+			NoPurchaseHistoryFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ApiResponse(exception.getMessage(), HttpStatus.NOT_FOUND));
+
+	}
 }
