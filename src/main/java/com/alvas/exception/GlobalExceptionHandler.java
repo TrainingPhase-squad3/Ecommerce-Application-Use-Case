@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	@ExceptionHandler(ProductNotFoundException.class)
 	public ResponseEntity<String> handleRequestedQuantityNotAvailableException(ProductNotFoundException exception) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(exception.getMessage());
 
 	}
@@ -37,6 +37,41 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<String> handleFoodItemNotFoundException(UserNotFoundException exception) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(exception.getMessage());
+
+	}
+	@ExceptionHandler(CartNotFoundException.class)
+	public ResponseEntity<ApiResponse> handleCartNotFoundException(CartNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ApiResponse(exception.getMessage(), HttpStatus.NOT_FOUND));
+
+	}
+
+	@ExceptionHandler(InsufficientFundsException.class)
+	public ResponseEntity<ApiResponse> handleResourceNotFoundException(InsufficientFundsException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ApiResponse(exception.getMessage(), HttpStatus.PAYMENT_REQUIRED));
+
+	}
+
+	@ExceptionHandler(WalletExpiredException.class)
+	public ResponseEntity<ApiResponse> handleResourceWalletExpiredException(WalletExpiredException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ApiResponse(exception.getMessage(), HttpStatus.GONE));
+
+	}
+
+	@ExceptionHandler(WalletNotFoundException.class)
+	public ResponseEntity<ApiResponse> handleWalletNotFoundException(WalletNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ApiResponse(exception.getMessage(), HttpStatus.NOT_FOUND));
+
+	}
+
+	@ExceptionHandler(RequestedQuantityNotAvailableException.class)
+	public ResponseEntity<ApiResponse> handleRequestedQuantityNotAvailableException(
+			RequestedQuantityNotAvailableException exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new ApiResponse(exception.getMessage(), HttpStatus.BAD_REQUEST));
 
 	}
 }
