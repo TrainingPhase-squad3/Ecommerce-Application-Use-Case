@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.alvas.dto.CartDto;
 import com.alvas.dto.CartProductDto;
 import com.alvas.entity.Cart;
@@ -27,12 +28,15 @@ public class CartServiceImpl implements CartService{
 	private ProductRepository productRepository;
 	@Autowired
 	private CartRepository cartRepository;
+	private static final Logger logger = LoggerFactory.getLogger(CartServiceImpl.class);
 	@Override
 	public ApiResponse addToCart(long userId, CartDto cartDto) {
 		User user=userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("User with id:"+userId+"not found"));
 		List<Product> products=productRepository.findByProductIdIn(cartDto.getProductDtos().stream().map(CartProductDto::getProductId).toList());
-		if(products.size()<cartDto.getProductDtos().size())
+		if(products.size()<cartDto.getProductDtos().size()) {
+			logger.warn("requested product not found");
 			throw new ProductNotFoundException("product not found");
+		}
 		Cart cart=new Cart();
 		cart.setUser(user);
 		cart.setTotalQuantity(cartDto.getProductDtos().stream().mapToInt(CartProductDto::getQuantity).sum());
@@ -53,10 +57,10 @@ public class CartServiceImpl implements CartService{
 			});	
 			return cartProduct;
 		}).toList());
-		
+		logger.info("Successfully persisted cart information");
 		cartRepository.save(cart);
 		
-		return new ApiResponse("Successfully Added to cart",HttpStatus.CREATED);
+		return new ApiResponse("Successfully Added products to cart",HttpStatus.CREATED);
 				
 	}
 
