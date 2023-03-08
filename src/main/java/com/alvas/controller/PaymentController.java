@@ -27,5 +27,14 @@ public class PaymentController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.payment(userID, paymentDto));
 
 	}
+	@GetMapping("/{userId}")
+	public ResponseEntity<List<PurchaseHistoryResponse>> getUserPurchasesForMonth(@PathVariable Long userId,
+			@RequestParam("year") int year, @RequestParam("month") int month, @RequestParam int pageNumber,
+			@RequestParam int pageSize) {
+		List<PurchaseHistoryResponse> purchases = paymentService.getUserPurchasesForMonth(userId,
+				LocalDate.of(year, month, 1), pageNumber, pageSize);
+
+		return ResponseEntity.ok(purchases);
+	}
 
 }
