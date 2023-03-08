@@ -41,7 +41,7 @@ class CartServiceImplTest {
 
 	@Test
 	void testAddToCart() {
-		// create some mock data
+		
 		long userId = 1L;
 		List<CartProductDto> productDtos = Arrays.asList(new CartProductDto(1L, 2), new CartProductDto(2L, 3));
 		CartDto cartDto = new CartDto(productDtos);
@@ -62,7 +62,7 @@ class CartServiceImplTest {
 
 		ApiResponse response = cartService.addToCart(userId, cartDto);
 
-		assertEquals("Successfully Added to cart", response.getMessage());
+		assertEquals("Successfully Added products to cart", response.getMessage());
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 	}
 
