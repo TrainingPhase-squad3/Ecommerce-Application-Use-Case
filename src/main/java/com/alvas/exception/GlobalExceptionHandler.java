@@ -26,4 +26,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		});
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ResponseEntity<String> handleRequestedQuantityNotAvailableException(ProductNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(exception.getMessage());
+
+	}
+	@ExceptionHandler( UserNotFoundException.class)
+	public ResponseEntity<String> handleFoodItemNotFoundException(UserNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(exception.getMessage());
+
+	}
 }
