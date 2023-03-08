@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	@ExceptionHandler(ProductNotFoundException.class)
 	public ResponseEntity<String> handleRequestedQuantityNotAvailableException(ProductNotFoundException exception) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(exception.getMessage());
 
 	}
