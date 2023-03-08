@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Payment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +32,12 @@ public class Payment {
 	private Cart cart;
 	@CreationTimestamp
 	private LocalDate paymentDate;
+	
+	private double totalPrice;
+
+	
+
+	
+	
 
 }
